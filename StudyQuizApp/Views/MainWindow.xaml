@@ -57,7 +57,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="Add question:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
                 <Button x:Name="addMultipleChoiceQBtn" Content="Multiple Choice" Margin="10" Grid.Column="1"/>
-                <Button x:Name="addQualitativeQBtn" Grid.Column="2" Content="Qualitative (Q&amp;A)" Margin="10"/>
+                <Button x:Name="addQualitativeQBtn" Grid.Column="2" Content="Qualitative (Q&amp;A)" Margin="10" Click="AddQualitativeQ_Click"/>
             </Grid>
 
             <Label Grid.Row="1" x:Name="ListLabel" Content="Questions:"/>

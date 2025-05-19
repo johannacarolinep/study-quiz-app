@@ -6,7 +6,35 @@ using System.Threading.Tasks;
 
 namespace StudyQuizApp.Models
 {
-    class QualitativeQuestion
+    public class QualitativeQuestion : Question
     {
+        // Fields
+        private string answer;
+
+        // Constructor
+        public QualitativeQuestion(string questionText, string answer) : base(questionText)
+        {
+            Answer = answer;
+        }
+
+        // Properties
+        public string Answer 
+        {
+            get => answer;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    throw new ArgumentException("Answer cannot be empty or whitespace.");
+                }
+
+                answer = value;
+            }
+        }
+
+        public override QuestionType Type => QuestionType.Qualitative;
+
+        // Methods
+        public override string GetCorrectAnswer() => answer;
     }
 }

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace StudyQuizApp.Models
 {
-    class QuestionType
+    public enum QuestionType
     {
+        MultipleChoice,
+        Qualitative
     }
 }

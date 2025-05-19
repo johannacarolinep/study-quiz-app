@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using StudyQuizApp.Models;
+using StudyQuizApp.Services;
 
 namespace StudyQuizApp.Views
 {
@@ -16,9 +18,18 @@ namespace StudyQuizApp.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        // Fields
+        private QuizManager quizManager = new QuizManager();
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void AddQualitativeQ_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Add Qualitative Question button clicked!");
+
         }
     }
 }
