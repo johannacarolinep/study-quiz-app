@@ -23,26 +23,29 @@ namespace StudyQuizApp.Views
 
         // Fields
         private Question? questionResult;
+        private QuestionType currentType;
 
         public QuestionWindow(QuestionType type)
         {
             InitializeComponent();
-            InitializeGUIForType(type);
+            currentType = type;
+            InitializeGUI();
         }
 
         public QuestionWindow(Question question)
         {
             InitializeComponent();
-            InitializeGUIForType(question.Type);
+            currentType = question.Type;
+            InitializeGUI();
             PopulateFields(question);
         }
 
         // Properties
         public Question QuestionResult { get => questionResult; }
 
-        private void InitializeGUIForType(QuestionType type) 
+        private void InitializeGUI() 
         {
-         if (type == QuestionType.Qualitative)
+         if (currentType == QuestionType.Qualitative)
             {
                 // Update header
                 titleTextBlock.Text = "Add new Q&A style question:";
@@ -118,6 +121,74 @@ namespace StudyQuizApp.Views
         private void PopulateFields(Question question)
         {
             // populate fields
+        }
+
+        private void saveBtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentType == QuestionType.Qualitative)
+            {
+                try
+                {
+                    // Get answer textbox (assumes it's the second child in dynamicFieldsPanel)
+                    TextBox answerBox = dynamicFieldsPanel.Children
+                        .OfType<TextBox>()
+                        .FirstOrDefault();
+
+                    if (answerBox == null)
+                        throw new Exception("Answer field not found.");
+
+                    questionResult = new QualitativeQuestion(questionTextBox.Text, answerBox.Text);
+                    DialogResult = true;
+                    Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error:\n{ex.Message}",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                
+            } else
+            {
+                try
+                {
+                    // Collect all 4 option textboxes
+                    var optionBoxes = dynamicFieldsPanel.Children
+                        .OfType<TextBox>()
+                        .ToList();
+
+                    if (optionBoxes.Count < 4)
+                        throw new Exception("Not all 4 options are filled.");
+
+                    string[] options = optionBoxes.Take(4).Select(tb => tb.Text).ToArray();
+
+                    // Get ComboBox for correct index (assumes last child is StackPanel with ComboBox)
+                    ComboBox combo = dynamicFieldsPanel.Children
+                        .OfType<StackPanel>()
+                        .SelectMany(sp => sp.Children.OfType<ComboBox>())
+                        .FirstOrDefault();
+
+                    if (combo == null)
+                        throw new Exception("Could not read 'correct answer' selection.");
+
+                    int correctIndex = combo.SelectedIndex;
+
+                    questionResult = new MultipleChoiceQuestion(questionTextBox.Text, options, correctIndex);
+                    DialogResult = true;
+                    Close();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error:\n{ex.Message}",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+
+            }
         }
     }
 }

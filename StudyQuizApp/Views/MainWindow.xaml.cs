@@ -49,6 +49,8 @@ namespace StudyQuizApp.Views
                 if (newQuestion != null)
                 {
                     // Add question and update UI
+                    quizManager.AddQuestion(newQuestion);
+
                     MessageBox.Show(
                         "Question was successfully created!",
                         "Success",
