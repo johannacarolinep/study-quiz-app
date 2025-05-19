@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StudyQuizApp.Views"
         mc:Ignorable="d"
-        Title="QuestionWindow" Height="450" Width="800">
-    <Grid>
+        Title="QuestionWindow" Height="509" Width="447">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Title -->
+            <RowDefinition Height="Auto"/>
+            <!-- Question text -->
+            <RowDefinition Height="*"/>
+            <!-- Dynamic content -->
+            <RowDefinition Height="Auto"/>
+            <!-- Buttons -->
+        </Grid.RowDefinitions>
         
+        <!-- Row 0: Title -->
+        <TextBlock Grid.Row="0"
+                   Text="Add/Edit Question:"
+                   FontSize="18"
+                   FontWeight="Bold"
+                   Margin="0,0,0,10"
+                   x:Name="titleTextBlock"/>
+        
+        <!-- Row 1: Question label + textbox -->
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <Label Content="Question Text:"/>
+            <TextBox x:Name="questionTextBox" Margin="0,0,0,10" Height="39"/>
+        </StackPanel>
+
+        <!-- Row 2: Dynamic content panel -->
+        <StackPanel x:Name="dynamicFieldsPanel"
+                    Grid.Row="2"
+                    Margin="0,0,0,10"
+                    VerticalAlignment="Top"/>
+        
+        <!-- Row 3: Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Cancel" Width="80" Margin="0,0,10,0" Height="30"/>
+            <Button Content="Save" Width="80"/>
+        </StackPanel>
     </Grid>
+
 </Window>
