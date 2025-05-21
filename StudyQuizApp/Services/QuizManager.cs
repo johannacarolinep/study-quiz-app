@@ -20,5 +20,17 @@ namespace StudyQuizApp.Services
         public void AddQuestion(Question question) { 
         questionList.Add(question);
         }
+
+        public string[] GetQuestionStrings()
+        {
+            string[] strings = new string[questionList.Count];
+
+            for (int i = 0; i < questionList.Count; i++)
+            {
+                strings[i] = "Q: " + questionList[i].QuestionText;
+            }
+
+            return strings;
+        }
     }
 }

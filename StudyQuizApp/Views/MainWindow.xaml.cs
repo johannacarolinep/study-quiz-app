@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -50,6 +51,7 @@ namespace StudyQuizApp.Views
                 {
                     // Add question and update UI
                     quizManager.AddQuestion(newQuestion);
+                    UpdateQListBox();
 
                     MessageBox.Show(
                         "Question was successfully created!",
@@ -67,6 +69,11 @@ namespace StudyQuizApp.Views
                 }
 
             }
+        }
+
+        private void UpdateQListBox()
+        {
+            questionsListBox.ItemsSource = quizManager.GetQuestionStrings();
         }
     }
 }
