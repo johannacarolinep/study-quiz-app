@@ -21,6 +21,14 @@ namespace StudyQuizApp.Services
         questionList.Add(question);
         }
 
+        public void UpdateQuestion(Question updatedQuestion, int index)
+        {
+            if (!CheckIndex(index)) {
+                throw new Exception("Could not find the question to update.");
+            }
+            questionList[index] = updatedQuestion;
+        }
+
         public string[] GetQuestionStrings()
         {
             string[] strings = new string[questionList.Count];
@@ -31,6 +39,20 @@ namespace StudyQuizApp.Services
             }
 
             return strings;
+        }
+
+        public Question RetrieveQuestion(int index)
+        {
+            if (!CheckIndex(index)) {
+                return null;
+            }
+            return questionList[index].Clone();
+        }
+
+        private bool CheckIndex(int index)
+        {
+            if (index >= 0 && index <= questionList.Count) { return true; }
+            return false;
         }
     }
 }

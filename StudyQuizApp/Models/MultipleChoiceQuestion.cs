@@ -19,12 +19,18 @@ namespace StudyQuizApp.Models
             CorrectIndex = correctIndex;
         }
 
+        public MultipleChoiceQuestion(MultipleChoiceQuestion other) : base(other)
+        {
+            Options = other.Options;
+            CorrectIndex = other.CorrectIndex;
+        }
+
         // Properties
-        public override QuestionType Type => QuestionType.Qualitative;
+        public override QuestionType Type => QuestionType.MultipleChoice;
 
         public string[] Options 
         {
-            get { return options; }
+            get { return (string[])options.Clone(); }
             set 
             {
                 if (value == null)
@@ -55,6 +61,11 @@ namespace StudyQuizApp.Models
         // Methods
         public override string GetCorrectAnswer() { 
             return options[correctIndex];
+        }
+
+        public override Question Clone()
+        {
+            return new MultipleChoiceQuestion(this);
         }
     }
 }

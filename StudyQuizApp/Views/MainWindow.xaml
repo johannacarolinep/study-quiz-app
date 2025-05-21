@@ -66,7 +66,7 @@
              x:Name="questionsListBox"
              Margin="0,5"
              ScrollViewer.CanContentScroll="True"
-             VerticalAlignment="Stretch"/>
+             VerticalAlignment="Stretch" SelectionChanged="qListSelectionChanged"/>
 
             <!-- Bottom Buttons -->
             <Grid Grid.Row="3" Height="50">
@@ -75,8 +75,8 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="editQBtn" Grid.Column="0" Content="Edit" Margin="10"/>
-                <Button x:Name="deleteQBtn" Grid.Column="1" Content="Delete" Margin="10"/>
+                <Button x:Name="editQBtn" Grid.Column="0" Content="Edit" Margin="10" IsEnabled="False" Click="editQBtn_Click"/>
+                <Button x:Name="deleteQBtn" Grid.Column="1" Content="Delete" Margin="10" IsEnabled="False"/>
                 <Button x:Name="clearSelectionBtn" Grid.Column="2" Content="Clear" Margin="10"/>
             </Grid>
         </Grid>

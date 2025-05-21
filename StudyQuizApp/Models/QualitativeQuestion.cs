@@ -17,6 +17,11 @@ namespace StudyQuizApp.Models
             Answer = answer;
         }
 
+        public QualitativeQuestion(QualitativeQuestion other) : base(other)
+        {
+            Answer = other.Answer;
+        }
+
         // Properties
         public string Answer 
         {
@@ -36,5 +41,10 @@ namespace StudyQuizApp.Models
 
         // Methods
         public override string GetCorrectAnswer() => answer;
+
+        public override Question Clone()
+        {
+            return new QualitativeQuestion(this);
+        }
     }
 }

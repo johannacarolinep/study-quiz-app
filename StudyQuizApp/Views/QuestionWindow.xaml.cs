@@ -109,7 +109,53 @@ namespace StudyQuizApp.Views
 
         private void PopulateFields(Question question)
         {
+
+            titleTextBlock.Text = "Edit question:";
+
             // populate fields
+            questionTextBox.Text = question.QuestionText;
+
+            if (currentType == QuestionType.Qualitative)
+            {
+                // populate fields answer textbox
+                TextBox? answerBox = dynamicFieldsPanel.Children
+                    .OfType<TextBox>()
+                    .FirstOrDefault();
+
+                if (answerBox != null && question is QualitativeQuestion qq)
+                {
+                    answerBox.Text = qq.Answer;
+                }
+
+            }
+            else
+            {
+                // populate fields options and combobox
+                // Fill in the 4 option TextBoxes
+                var optionBoxes = dynamicFieldsPanel.Children
+                    .OfType<TextBox>()
+                    .Take(4)  // Assuming they're added in order
+                    .ToList();
+
+                if (question is MultipleChoiceQuestion mcq)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        optionBoxes[i].Text = mcq.Options[i];
+                    }
+
+                    // Find the ComboBox inside the StackPanel for correct answer
+                    ComboBox? correctCombo = dynamicFieldsPanel.Children
+                        .OfType<StackPanel>()
+                        .SelectMany(sp => sp.Children.OfType<ComboBox>())
+                        .FirstOrDefault();
+
+                    if (correctCombo != null)
+                    {
+                        correctCombo.SelectedIndex = mcq.CorrectIndex;
+                    }
+                }
+            }
         }
 
         private void saveBtn_Click(object sender, RoutedEventArgs e)

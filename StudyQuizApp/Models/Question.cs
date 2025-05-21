@@ -17,6 +17,13 @@ namespace StudyQuizApp.Models
             QuestionText = questionText;
         }
 
+        // Copy constructor
+        public Question(Question other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+            QuestionText = other.QuestionText;
+        }
+
         // Properties
         public string QuestionText 
         {
@@ -40,5 +47,7 @@ namespace StudyQuizApp.Models
 
         // Methods
         public abstract string GetCorrectAnswer();
+
+        public abstract Question Clone();
     }
 }
