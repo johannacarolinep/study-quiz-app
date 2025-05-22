@@ -32,6 +32,7 @@ namespace StudyQuizApp.ViewModels
 
         public ICommand ClearSelectionCommand { get; }
         public ICommand EditQuestionCommand { get; }
+        public ICommand DeleteQuestionCommand { get; }
 
         public bool CanEditOrDelete => SelectedIndex >= 0;
 
@@ -46,6 +47,11 @@ namespace StudyQuizApp.ViewModels
 
             EditQuestionCommand = new RelayCommand(
                 _ => OnEditQuestion(),
+                _ => CanEditOrDelete
+            );
+
+            DeleteQuestionCommand = new RelayCommand(
+                _ => OnDeleteQuestion(),
                 _ => CanEditOrDelete
             );
 
@@ -192,6 +198,37 @@ namespace StudyQuizApp.ViewModels
             else if (result == true)
             {
                 MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private void OnDeleteQuestion()
+        {
+            if (SelectedIndex < 0)
+            {
+                MessageBox.Show("Please first select which question to delete.", "No selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Confirm deletion
+            string questionText = QuestionStrings[SelectedIndex];
+
+            MessageBoxResult result = MessageBox.Show(
+                $"Are you sure you want to delete this question?\n\n\"{questionText}\"",
+                "Confirm Deletion",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    quizManager.DeleteQuestion(SelectedIndex);
+                    UpdateQuestionList();
+                    MessageBox.Show("Question deleted.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                } catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

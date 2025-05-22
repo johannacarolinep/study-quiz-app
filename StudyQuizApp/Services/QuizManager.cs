@@ -29,6 +29,15 @@ namespace StudyQuizApp.Services
             questionList[index] = updatedQuestion;
         }
 
+        public void DeleteQuestion(int index)
+        {
+            if (!CheckIndex(index))
+            {
+                throw new Exception("Failed to delete question. Index not found.");
+            }
+            questionList.RemoveAt(index);
+        }
+
         public string[] GetQuestionStrings()
         {
             string[] strings = new string[questionList.Count];

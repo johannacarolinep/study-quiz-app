@@ -89,6 +89,7 @@
                         Grid.Column="1"
                         Content="Delete"
                         Margin="10"
+                        Command="{Binding DeleteQuestionCommand}"
                         IsEnabled="{Binding CanEditOrDelete}"/>
                 <Button x:Name="clearSelectionBtn"
                         Grid.Column="2"
