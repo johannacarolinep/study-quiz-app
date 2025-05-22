@@ -83,7 +83,7 @@
                         Grid.Column="0"
                         Content="Edit"
                         Margin="10"
-                        Click="editQBtn_Click"
+                        Command="{Binding EditQuestionCommand}"
                         IsEnabled="{Binding CanEditOrDelete}"/>
                 <Button x:Name="deleteQBtn"
                         Grid.Column="1"

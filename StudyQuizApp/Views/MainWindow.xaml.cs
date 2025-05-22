@@ -42,39 +42,5 @@ namespace StudyQuizApp.Views
             }
         }
 
-        private void editQBtn_Click(object sender, RoutedEventArgs e)
-        {
-            if (viewModel.SelectedIndex < 0)
-            {
-                MessageBox.Show("Please select a question to edit.", "No selection", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            Question selectedQ = viewModel.RetrieveSelectedQuestion();
-            if (selectedQ == null)
-            {
-                MessageBox.Show("Failed to retrieve question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            QuestionWindow editWindow = new QuestionWindow(selectedQ);
-            bool? result = editWindow.ShowDialog();
-
-            if (result == true && editWindow.QuestionResult is Question updatedQ)
-            {
-                try
-                {
-                    viewModel.UpdateQuestion(updatedQ);
-                    MessageBox.Show("Question updated.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                catch
-                {
-                    MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-            }
-            else if (result == true) {
-                MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
     }
 }

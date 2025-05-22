@@ -7,6 +7,7 @@ using StudyQuizApp.Helpers;
 using StudyQuizApp.Models;
 using StudyQuizApp.Services;
 using StudyQuizApp.ViewModels.DisplayContent;
+using StudyQuizApp.Views;
 
 namespace StudyQuizApp.ViewModels
 {
@@ -25,33 +26,12 @@ namespace StudyQuizApp.ViewModels
                 _selectedIndex = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CanEditOrDelete));
-                var q = quizManager.RetrieveQuestion(SelectedIndex);
-                if (q is QualitativeQuestion qualitative)
-                {
-                    DisplayContent = new QualitativeQuestionDetailContent
-                    {
-                        QuestionText = qualitative.QuestionText,
-                        Answer = qualitative.Answer
-                    };
-                }
-                else if (q is MultipleChoiceQuestion mcq)
-                {
-                    var options = mcq.Options.Select((opt, index) => new OptionViewModel
-                    {
-                        Text = opt,
-                        IsCorrect = index == mcq.CorrectIndex
-                    }).ToList();
-
-                    DisplayContent = new MultipleChoiceQuestionDetailContent
-                    {
-                        QuestionText = mcq.QuestionText,
-                        FormattedOptions = options
-                    };
-                }
+                UpdateDisplayContent();
             }
         }
 
         public ICommand ClearSelectionCommand { get; }
+        public ICommand EditQuestionCommand { get; }
 
         public bool CanEditOrDelete => SelectedIndex >= 0;
 
@@ -61,6 +41,11 @@ namespace StudyQuizApp.ViewModels
 
             ClearSelectionCommand = new RelayCommand(
                 _ => ClearSelection(),
+                _ => CanEditOrDelete
+            );
+
+            EditQuestionCommand = new RelayCommand(
+                _ => OnEditQuestion(),
                 _ => CanEditOrDelete
             );
 
@@ -98,6 +83,50 @@ namespace StudyQuizApp.ViewModels
             }
         }
 
+        private void UpdateDisplayContent()
+        {
+            if (SelectedIndex == -1)
+            {
+                DisplayContent = new InstructionContent
+                {
+                    Heading = "You're using StudyQuizApp!",
+                    Subheading = "Create questions or load an existing CSV file, and run the quiz to rehearse.",
+                    Instructions = new List<string>
+                    {
+                        "Create questions manually by clicking the Add buttons in the upper left corner",
+                        "Select a question in the list to view its details here",
+                        "Upload existing questions via the \"File\" menu option",
+                        "Click \"Run quiz\" to start rehearsing"
+                    }
+                };
+                return;
+            }
+
+            var q = quizManager.RetrieveQuestion(SelectedIndex);
+            if (q is QualitativeQuestion qualitative)
+            {
+                DisplayContent = new QualitativeQuestionDetailContent
+                {
+                    QuestionText = qualitative.QuestionText,
+                    Answer = qualitative.Answer
+                };
+            }
+            else if (q is MultipleChoiceQuestion mcq)
+            {
+                var options = mcq.Options.Select((opt, index) => new OptionViewModel
+                {
+                    Text = opt,
+                    IsCorrect = index == mcq.CorrectIndex
+                }).ToList();
+
+                DisplayContent = new MultipleChoiceQuestionDetailContent
+                {
+                    QuestionText = mcq.QuestionText,
+                    FormattedOptions = options
+                };
+            }
+        }
+
         public void AddQuestion(Question question)
         {
             quizManager.AddQuestion(question);
@@ -109,12 +138,6 @@ namespace StudyQuizApp.ViewModels
             return quizManager.RetrieveQuestion(SelectedIndex);
         }
 
-        public void UpdateQuestion(Question updated)
-        {
-            quizManager.UpdateQuestion(updated, SelectedIndex);
-            UpdateQuestionList();
-        }
-
         private void ClearSelection()
         {
             SelectedIndex = -1;
@@ -123,13 +146,53 @@ namespace StudyQuizApp.ViewModels
                 Heading = "You're using StudyQuizApp!",
                 Subheading = "Create questions or load an existing CSV file, and run the quiz to rehearse.",
                 Instructions = new List<string>
-        {
-            "Create questions manually by clicking the Add buttons in the upper left corner",
-            "Select a question in the list to view its details here",
-            "Upload existing questions via the \"File\" menu option",
-            "Click \"Run quiz\" to start rehearsing"
-        }
+                {
+                    "Create questions manually by clicking the Add buttons in the upper left corner",
+                    "Select a question in the list to view its details here",
+                    "Upload existing questions via the \"File\" menu option",
+                    "Click \"Run quiz\" to start rehearsing"
+                }
             };
+        }
+
+
+        private void OnEditQuestion()
+        {
+            if (SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select a question to edit.", "No selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            Question selectedQ = RetrieveSelectedQuestion();
+            if (selectedQ == null)
+            {
+                MessageBox.Show("Failed to retrieve question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            QuestionWindow editWindow = new QuestionWindow(selectedQ);
+            bool? result = editWindow.ShowDialog();
+
+            if (result == true && editWindow.QuestionResult is Question updatedQ)
+            {
+                try
+                {
+                    quizManager.UpdateQuestion(updatedQ, SelectedIndex);
+                    int currentIndex = SelectedIndex;
+                    UpdateQuestionList();
+                    SelectedIndex = currentIndex;
+                    MessageBox.Show("Question updated.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch
+                {
+                    MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (result == true)
+            {
+                MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
