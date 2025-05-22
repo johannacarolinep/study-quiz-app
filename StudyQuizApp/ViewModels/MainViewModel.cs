@@ -35,6 +35,7 @@ namespace StudyQuizApp.ViewModels
         public ICommand DeleteQuestionCommand { get; }
 
         public bool CanEditOrDelete => SelectedIndex >= 0;
+        public bool CanRunQuiz => QuestionStrings.Count > 0;
 
         public MainViewModel()
         {
@@ -66,6 +67,11 @@ namespace StudyQuizApp.ViewModels
                     "Upload existing questions via the \"File\" menu option",
                     "Click \"Run quiz\" to start rehearsing"
                 }
+            };
+
+            QuestionStrings.CollectionChanged += (_, __) =>
+            {
+                OnPropertyChanged(nameof(CanRunQuiz));
             };
         }
 

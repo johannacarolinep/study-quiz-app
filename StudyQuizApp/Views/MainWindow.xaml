@@ -109,7 +109,11 @@
                 <!-- For the TextBox, fills remaining space -->
             </Grid.RowDefinitions>
 
-                <Button Grid.Row="0" Content="Run Quiz" Margin="10"/>
+                <Button
+                    Grid.Row="0"
+                    Content="Run Quiz"
+                    Margin="10"
+                    IsEnabled="{Binding CanRunQuiz}"/>
 
                 <ContentControl Grid.Row="1"
                 x:Name="displayArea"
