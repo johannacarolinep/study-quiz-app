@@ -1,36 +1,19 @@
-﻿using System.Printing;
-using System.Text;
-using System.Threading.Tasks;
+﻿using StudyQuizApp.Models;
+using StudyQuizApp.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using StudyQuizApp.Models;
-using StudyQuizApp.Services;
 
 namespace StudyQuizApp.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        // Fields
-        private QuizManager quizManager = new QuizManager();
+        private readonly MainViewModel viewModel;
 
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void InitializeGUI()
-        {
-            EnableEditAndDelete(false);
+            viewModel = new MainViewModel();
+            DataContext = viewModel;
         }
 
         private void AddQualitativeQ_Click(object sender, RoutedEventArgs e)
@@ -45,122 +28,52 @@ namespace StudyQuizApp.Views
 
         private void OpenCreateQuestionForm(QuestionType type)
         {
-            QuestionWindow questionWindow = new QuestionWindow(type);
-
+            var questionWindow = new QuestionWindow(type);
             bool? result = questionWindow.ShowDialog();
 
-            if (result == true)
+            if (result == true && questionWindow.QuestionResult is Question newQuestion)
             {
-                Question newQuestion = questionWindow.QuestionResult;
-
-                if (newQuestion != null)
-                {
-                    // Add question and update UI
-                    quizManager.AddQuestion(newQuestion);
-                    UpdateQListBox();
-
-                    MessageBox.Show(
-                        "Question was successfully created!",
-                        "Success",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
-                }
-                else
-                {
-                    MessageBox.Show(
-                        "Sorry, something went wrong when adding the question. Please try again.",
-                        "Unexpected failure",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
-                }
-
+                viewModel.AddQuestion(newQuestion);
+                MessageBox.Show("Question created!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-        }
-
-        private void UpdateQListBox()
-        {
-            questionsListBox.ItemsSource = quizManager.GetQuestionStrings();
-        }
-
-        private void qListSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Enable edit and delete buttons
-            EnableEditAndDelete(true);
-
-            // To be implemented - display question details
-        }
-
-        private void EnableEditAndDelete(bool shouldBeEnabled)
-        {
-            editQBtn.IsEnabled = shouldBeEnabled;
-            deleteQBtn.IsEnabled = shouldBeEnabled;
+            else if (result == true)
+            {
+                MessageBox.Show("Failed to create question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void editQBtn_Click(object sender, RoutedEventArgs e)
         {
-            // Double check a question is selected
-            if (questionsListBox.SelectedItem == null) {
-                MessageBox.Show(
-                    "Please select the question you wish to edit from the list first.",
-                    "No question selected",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+            if (viewModel.SelectedIndex < 0)
+            {
+                MessageBox.Show("Please select a question to edit.", "No selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            // Retreieve a copy of the question
-            Question qToEdit = quizManager.RetrieveQuestion(questionsListBox.SelectedIndex);
-
-            if (qToEdit == null) {
-                MessageBox.Show(
-                    "Sorry, we failed to retrieve the question. Please try again.",
-                    "Failure to retrieve question",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
-                 return;
+            Question selectedQ = viewModel.RetrieveSelectedQuestion();
+            if (selectedQ == null)
+            {
+                MessageBox.Show("Failed to retrieve question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
-            // open an edit form (questionform)
-            QuestionWindow questionWindow = new QuestionWindow(qToEdit);
+            QuestionWindow editWindow = new QuestionWindow(selectedQ);
+            bool? result = editWindow.ShowDialog();
 
-            bool? result = questionWindow.ShowDialog();
-
-            // check results - if ok, update question in quizmanager
-            if (result == true)
+            if (result == true && editWindow.QuestionResult is Question updatedQ)
             {
-                Question updatedQuestion = questionWindow.QuestionResult;
-
-                if (updatedQuestion != null)
+                try
                 {
-                    // Add question and update UI
-                    try
-                    {
-                        quizManager.UpdateQuestion(updatedQuestion, questionsListBox.SelectedIndex);
-                        questionsListBox.SelectedIndex = 0;
-                        EnableEditAndDelete(false);
-                        UpdateQListBox();
-                        MessageBox.Show(
-                            "Question was successfully updated!",
-                            "Success",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Information);
-                    }
-                    catch (Exception ex) {
-                        MessageBox.Show(
-                            $"Error: {ex.Message}",
-                            "Unexpected failure",
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Warning);
-                    }
+                    viewModel.UpdateQuestion(updatedQ);
+                    MessageBox.Show("Question updated.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
-                else
+                catch
                 {
-                    MessageBox.Show(
-                        "Sorry, something went wrong when updating the question. Please try again.",
-                        "Unexpected failure",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Warning);
+                    MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
+            }
+            else if (result == true) {
+                MessageBox.Show("Failed to update question.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
     }

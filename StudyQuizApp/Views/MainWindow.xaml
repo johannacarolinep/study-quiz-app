@@ -63,10 +63,12 @@
             <Label Grid.Row="1" x:Name="ListLabel" Content="Questions:"/>
 
             <ListBox Grid.Row="2"
-             x:Name="questionsListBox"
-             Margin="0,5"
-             ScrollViewer.CanContentScroll="True"
-             VerticalAlignment="Stretch" SelectionChanged="qListSelectionChanged"/>
+                 x:Name="questionsListBox"
+                 Margin="0,5"
+                 ScrollViewer.CanContentScroll="True"
+                 VerticalAlignment="Stretch"
+                 ItemsSource="{Binding QuestionStrings}"
+                 SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"/>
 
             <!-- Bottom Buttons -->
             <Grid Grid.Row="3" Height="50">
@@ -75,8 +77,17 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="editQBtn" Grid.Column="0" Content="Edit" Margin="10" IsEnabled="False" Click="editQBtn_Click"/>
-                <Button x:Name="deleteQBtn" Grid.Column="1" Content="Delete" Margin="10" IsEnabled="False"/>
+                <Button x:Name="editQBtn"
+                        Grid.Column="0"
+                        Content="Edit"
+                        Margin="10"
+                        Click="editQBtn_Click"
+                        IsEnabled="{Binding CanEditOrDelete}"/>
+                <Button x:Name="deleteQBtn"
+                        Grid.Column="1"
+                        Content="Delete"
+                        Margin="10"
+                        IsEnabled="{Binding CanEditOrDelete}"/>
                 <Button x:Name="clearSelectionBtn" Grid.Column="2" Content="Clear" Margin="10"/>
             </Grid>
         </Grid>
@@ -93,7 +104,7 @@
             <Button Grid.Row="0" Content="Run Quiz" Margin="10"/>
 
             <TextBox Grid.Row="1"
-             x:Name="DisplayArea"
+             x:Name="displayArea"
              Text="Select a question to view its details..."
              TextWrapping="Wrap"
              VerticalScrollBarVisibility="Auto"
