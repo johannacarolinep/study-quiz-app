@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StudyQuizApp.Models
+{
+    public class Attempt
+    {
+        // Field
+        private int questionsCount;
+        private int correctCount = 0;
+
+        // Constructor
+        public Attempt(int totalQuestions) 
+        {
+            this.questionsCount = totalQuestions;
+        }
+
+        // Properties
+        public int QuestionsCount { get => questionsCount; }
+        public int CorrectCount { get => correctCount; }
+
+
+        // Methods
+        public void AddPoint() => correctCount++;
+
+        public double GetRelativePoint() =>
+            questionsCount > 0 ? (double)correctCount / questionsCount : 0;
+    }
+}

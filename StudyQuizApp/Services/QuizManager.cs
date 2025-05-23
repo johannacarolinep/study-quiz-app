@@ -10,10 +10,14 @@ namespace StudyQuizApp.Services
     public class QuizManager
     {
         // Fields
-        private List<Question> questionList;
+        private List<Question> questionList = new List<Question>();
+        private List<Attempt> attempts = new List<Attempt>();
+        private List<int> incorrectIndices = new List<int>();
+        private List<int> activeQuizIndices = new List<int>();
+        private int currentIndex = 0;
+        private Attempt? currentAttempt;
 
         public QuizManager() { 
-            questionList = new List<Question>();
         }
 
         // Methods
@@ -60,8 +64,59 @@ namespace StudyQuizApp.Services
 
         private bool CheckIndex(int index)
         {
-            if (index >= 0 && index <= questionList.Count) { return true; }
+            if (index >= 0 && index < questionList.Count) { return true; }
             return false;
         }
+
+        public void InitiateQuiz()
+        {
+            currentAttempt = new Attempt(questionList.Count);
+            //attempts.Add(new Attempt(questionList.Count)); When the quiz finishes! Should not be there in case of cancel
+            incorrectIndices = new List<int>();
+            activeQuizIndices = Enumerable.Range(0, questionList.Count).ToList();
+            currentIndex = 0;
+        }
+
+        public void StartRetry()
+        {
+            currentIndex = 0;
+            activeQuizIndices = incorrectIndices.ToList();
+            currentAttempt = new Attempt(activeQuizIndices.Count);
+            //attempts.Add(new Attempt()) Add to list when quiz finishes!
+            incorrectIndices = new List<int>();
+        }
+
+        public Question GetCurrentQuestion()
+        {
+            if (currentIndex >= 0 && currentIndex < activeQuizIndices.Count)
+            {
+                int realIndex = activeQuizIndices[currentIndex];
+                return RetrieveQuestion(realIndex);
+            }
+            return null;
+        }
+
+        public void MarkCorrect() => currentAttempt.AddPoint();
+
+        public void MarkIncorrect()
+        {
+            incorrectIndices.Add(activeQuizIndices[currentIndex]);
+        }
+
+        public void IncrementCurrentIndex()
+        {
+            if (currentIndex < activeQuizIndices.Count) currentIndex++;
+        }
+
+        public void FinishCurrentAttempt()
+        {
+            if (currentAttempt != null)
+            {
+                attempts.Add(currentAttempt);
+                currentAttempt = null;
+            }
+        }
+
+        public bool IsQuizComplete() => currentIndex >= activeQuizIndices.Count;
     }
 }
