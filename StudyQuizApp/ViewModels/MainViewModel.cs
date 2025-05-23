@@ -33,6 +33,7 @@ namespace StudyQuizApp.ViewModels
         public ICommand ClearSelectionCommand { get; }
         public ICommand EditQuestionCommand { get; }
         public ICommand DeleteQuestionCommand { get; }
+        public ICommand RunQuizCommand { get; }
 
         public bool CanEditOrDelete => SelectedIndex >= 0;
         public bool CanRunQuiz => QuestionStrings.Count > 0;
@@ -54,6 +55,11 @@ namespace StudyQuizApp.ViewModels
             DeleteQuestionCommand = new RelayCommand(
                 _ => OnDeleteQuestion(),
                 _ => CanEditOrDelete
+            );
+
+            RunQuizCommand = new RelayCommand(
+                _ => OnRunQuiz(),
+                _ => CanRunQuiz
             );
 
             DisplayContent = new InstructionContent
@@ -165,6 +171,16 @@ namespace StudyQuizApp.ViewModels
                     "Click \"Run quiz\" to start rehearsing"
                 }
             };
+        }
+
+        private void OnRunQuiz()
+        {
+            // Quiz logic
+            QuizWindow quizWindow = new QuizWindow(quizManager);
+            quizWindow.ShowDialog();
+
+            // update display-info if result true
+            // ask use to play again if incorrect questions exist
         }
 
 

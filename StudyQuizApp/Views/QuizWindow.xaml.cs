@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using StudyQuizApp.Services;
 
 namespace StudyQuizApp.Views
 {
@@ -19,9 +20,12 @@ namespace StudyQuizApp.Views
     /// </summary>
     public partial class QuizWindow : Window
     {
-        public QuizWindow()
+        private QuizManager quizManager;
+
+        public QuizWindow(QuizManager quizManager)
         {
             InitializeComponent();
+            this.quizManager = quizManager;
         }
     }
 }

@@ -7,6 +7,62 @@
         mc:Ignorable="d"
         Title="QuizWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="170"/>
+            <!-- Stats Panel -->
+            <ColumnDefinition Width="*"/>
+            <!-- Quiz Content Panel -->
+        </Grid.ColumnDefinitions>
+
+        <!-- Left: Stats and Controls -->
+        <Border Grid.Column="0"
+        Background="#EEE"
+        Padding="10">
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <!-- Stats take all available space -->
+                    <RowDefinition Height="Auto" />
+                    <!-- Cancel button at the bottom -->
+                </Grid.RowDefinitions>
+
+                <!-- Top: Stats section -->
+                <StackPanel Grid.Row="0">
+                    <TextBlock
+                        Text="Q.X (out of Z)"
+                        FontWeight="Bold"
+                        FontSize="16"
+                        Margin="0 0 0 20"/>
+                    <TextBlock
+                        Text="Current score:"
+                        FontSize="14"
+                        FontWeight="Bold"
+                        Margin="0 0 0 5"/>
+                    <TextBlock
+                        Text="A correct (out of B)"
+                        FontSize="14"
+                        Margin="0 0 0 5"/>
+                    <TextBlock
+                        Text="X%"
+                        FontSize="14"/>
+                </StackPanel>
+
+                <!-- Bottom: Cancel button -->
+                <Button Grid.Row="1"
+                Content="Cancel Quiz"
+                HorizontalAlignment="Stretch"
+                Background="DarkRed"
+                Foreground="White"
+                Padding="10"
+                FontSize="13"
+                Margin="0 20 0 0"/>
+            </Grid>
+        </Border>
+
+        <!-- Right: Dynamic Quiz Content -->
+        <Border Grid.Column="1" Padding="20">
+            <!--<ContentControl Content="{Binding QuizContent}"/>-->
+        </Border>
     </Grid>
 </Window>
