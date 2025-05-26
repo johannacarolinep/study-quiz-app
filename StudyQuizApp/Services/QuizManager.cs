@@ -20,6 +20,10 @@ namespace StudyQuizApp.Services
         public QuizManager() { 
         }
 
+        public int CurrentIndex { get { return currentIndex; } }
+
+        public Attempt CurrentAttempt { get => currentAttempt; }
+
         // Methods
         public void AddQuestion(Question question) { 
         questionList.Add(question);
@@ -118,5 +122,7 @@ namespace StudyQuizApp.Services
         }
 
         public bool IsQuizComplete() => currentIndex >= activeQuizIndices.Count;
+
+        public bool IsLastQuestion() => currentIndex == activeQuizIndices.Count - 1;
     }
 }

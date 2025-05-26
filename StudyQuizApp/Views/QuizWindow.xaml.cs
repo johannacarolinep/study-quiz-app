@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using StudyQuizApp.Services;
+using StudyQuizApp.ViewModels;
 
 namespace StudyQuizApp.Views
 {
@@ -20,12 +21,21 @@ namespace StudyQuizApp.Views
     /// </summary>
     public partial class QuizWindow : Window
     {
-        private QuizManager quizManager;
+        private readonly QuizViewModel viewModel;
 
         public QuizWindow(QuizManager quizManager)
         {
             InitializeComponent();
-            this.quizManager = quizManager;
+            viewModel = new QuizViewModel(quizManager);
+            DataContext = viewModel;
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is QuizViewModel vm && sender is RadioButton rb && rb.Tag is string option)
+            {
+                vm.SelectedOption = option;
+            }
         }
     }
 }

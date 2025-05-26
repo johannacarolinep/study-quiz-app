@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace StudyQuizApp.Helpers
@@ -30,8 +26,23 @@ namespace StudyQuizApp.Helpers
 
         public event EventHandler? CanExecuteChanged
         {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
+            add
+            {
+                CommandManager.RequerySuggested += value;
+                _canExecuteChangedInternal += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+                _canExecuteChangedInternal -= value;
+            }
+        }
+
+        private event EventHandler? _canExecuteChangedInternal;
+
+        public void RaiseCanExecuteChanged()
+        {
+            _canExecuteChangedInternal?.Invoke(this, EventArgs.Empty);
         }
     }
 }

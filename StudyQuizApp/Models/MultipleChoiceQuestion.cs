@@ -28,6 +28,8 @@ namespace StudyQuizApp.Models
         // Properties
         public override QuestionType Type => QuestionType.MultipleChoice;
 
+        public string CorrectAnswer => GetCorrectAnswer();
+
         public string[] Options 
         {
             get { return (string[])options.Clone(); }
