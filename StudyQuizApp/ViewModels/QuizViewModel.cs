@@ -168,7 +168,7 @@ namespace StudyQuizApp.ViewModels
             else if (CurrentQuestion is QualitativeQuestion q)
             {
                 CorrectAnswerText = $"Suggested answer: {q.GetCorrectAnswer()}";
-                IsCorrect = null;
+                IsCorrect = false;
             }
 
             QuizState = QuizState.RevealingAnswer;
