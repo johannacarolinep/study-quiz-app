@@ -86,7 +86,6 @@ namespace StudyQuizApp.Services
             currentIndex = 0;
             activeQuizIndices = incorrectIndices.ToList();
             currentAttempt = new Attempt(activeQuizIndices.Count);
-            //attempts.Add(new Attempt()) Add to list when quiz finishes!
             incorrectIndices = new List<int>();
         }
 

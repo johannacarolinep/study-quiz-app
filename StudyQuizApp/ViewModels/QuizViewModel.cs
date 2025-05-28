@@ -82,6 +82,7 @@ namespace StudyQuizApp.ViewModels
             }
         }
 
+
         public QuizState QuizState
         {
             get => quizState;
@@ -92,6 +93,7 @@ namespace StudyQuizApp.ViewModels
                 OnPropertyChanged(nameof(IsShowingQuestion));
                 OnPropertyChanged(nameof(IsRevealingAnswer));
                 OnPropertyChanged(nameof(ShowAnswerDetails));
+                OnPropertyChanged(nameof(IsQuizFinished));
                 RevealAnswerCommand.RaiseCanExecuteChanged();
                 RegisterAnswerCommand.RaiseCanExecuteChanged();
                 OnPropertyChanged(nameof(NextOrFinishText));
@@ -125,6 +127,8 @@ namespace StudyQuizApp.ViewModels
         public bool ShowAnswerDetails => QuizState == QuizState.RevealingAnswer;
         public bool IsShowingQuestion => QuizState == QuizState.ShowingQuestion;
         public bool IsRevealingAnswer => QuizState == QuizState.RevealingAnswer;
+
+        public bool IsQuizFinished => QuizState == QuizState.QuizFinished;
         public bool IsMultipleChoice => CurrentQuestion is MultipleChoiceQuestion;
         public bool IsQualitative => CurrentQuestion is QualitativeQuestion;
 
@@ -194,12 +198,22 @@ namespace StudyQuizApp.ViewModels
 
             if (wasCorrect)
             {
-                quizManager.CurrentAttempt.AddPoint();
+                quizManager.MarkCorrect();
                 CorrectCount++;
-                Percent = quizManager.CurrentAttempt.GetRelativePoint() * 100;
+                
+            } else
+            {
+                quizManager.MarkIncorrect();
             }
 
-            if (!quizManager.IsQuizComplete())
+            Percent = quizManager.CurrentAttempt.GetRelativePoint() * 100;
+
+            LoadNextQOrFinishQuiz();
+        }
+
+        private void LoadNextQOrFinishQuiz()
+        {
+            if (!quizManager.IsLastQuestion())
             {
                 quizManager.IncrementCurrentIndex();
                 CurrentQuestion = quizManager.GetCurrentQuestion();
@@ -210,6 +224,8 @@ namespace StudyQuizApp.ViewModels
             }
             else
             {
+                quizManager.FinishCurrentAttempt();
+                CurrentQuestion = null;
                 QuizState = QuizState.QuizFinished;
             }
         }
