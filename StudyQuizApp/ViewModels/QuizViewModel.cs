@@ -23,6 +23,7 @@ namespace StudyQuizApp.ViewModels
         private bool? isCorrect;
         private string correctAnswerText;
         private ObservableCollection<string> finishedAttempts = new();
+        private int incorrectCount;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -71,6 +72,23 @@ namespace StudyQuizApp.ViewModels
             get => percent;
             set { percent = value; OnPropertyChanged(nameof(Percent)); }
         }
+
+        
+        public int IncorrectCount
+        {
+            get => incorrectCount;
+            set { 
+                incorrectCount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(HasMistakes));
+                OnPropertyChanged(nameof(HasPerfectScore));
+            }
+        }
+
+        public bool HasMistakes => IncorrectCount > 0;
+
+        public bool HasPerfectScore => IncorrectCount == 0;
+
 
         public bool IsLastQuestion => quizManager.IsLastQuestion();
 
@@ -245,6 +263,9 @@ namespace StudyQuizApp.ViewModels
 
                 // Refresh finished attempts
                 FinishedAttempts = new ObservableCollection<string>(quizManager.GetResultsSummaries());
+
+                // check if there are incorrect questions
+                IncorrectCount = quizManager.CountIncorrectIndices();
 
                 QuizState = QuizState.QuizFinished;
             }
