@@ -31,5 +31,10 @@ namespace StudyQuizApp.Models
             int denominator = questionsAnswered ?? questionsCount;
             return denominator > 0 ? (double)correctCount / denominator : 0;
         }
+
+        public override string ToString()
+        {
+            return $"Score: {CorrectCount}/{QuestionsCount} ({GetRelativePoint() * 100:F0}%)";
+        }
     }
 }

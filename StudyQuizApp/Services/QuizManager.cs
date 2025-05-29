@@ -123,5 +123,18 @@ namespace StudyQuizApp.Services
         public bool IsQuizComplete() => currentIndex >= activeQuizIndices.Count;
 
         public bool IsLastQuestion() => currentIndex == activeQuizIndices.Count - 1;
+
+        public List<string> GetResultsSummaries()
+        {
+            List<string> results = new List<string>();
+            for (int i = 0; i < attempts.Count; i++)
+            {
+                string attemptResult = i == 0 ? "Primary quiz run:\n" : $"Re-run {i + 2}\n";
+                attemptResult += $"{attempts[i].ToString()}";
+                results.Add(attemptResult);
+            }
+
+            return results;
+        }
     }
 }

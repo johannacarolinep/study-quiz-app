@@ -58,10 +58,29 @@
                 </Border>
 
                 <!-- Finished attempts: -->
-                <StackPanel Grid.Row="1">
-                    <!-- Add finished attempts in here -->
-                    <TextBlock>Finished attempts:</TextBlock>
-                </StackPanel>
+                <Grid Grid.Row="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" 
+                       Text="Finished attempts:" 
+                       FontWeight="Bold" 
+                       Margin="0 0 0 5"/>
+
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding FinishedAttempts}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" 
+                                       FontSize="13" 
+                                       Margin="0 0 0 10"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
 
                 <!-- Cancel button -->
                 <Button Grid.Row="2"

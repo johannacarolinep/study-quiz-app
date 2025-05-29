@@ -6,6 +6,7 @@ using StudyQuizApp.Models;
 using StudyQuizApp.Services;
 using StudyQuizApp.ViewModels.Enums;
 using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 
 namespace StudyQuizApp.ViewModels
 {
@@ -21,6 +22,7 @@ namespace StudyQuizApp.ViewModels
         private string selectedOption;
         private bool? isCorrect;
         private string correctAnswerText;
+        private ObservableCollection<string> finishedAttempts = new();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -73,6 +75,12 @@ namespace StudyQuizApp.ViewModels
         public bool IsLastQuestion => quizManager.IsLastQuestion();
 
         public string NextOrFinishText => IsLastQuestion ? "Finish" : "Next";
+
+        public ObservableCollection<string> FinishedAttempts
+        {
+            get => finishedAttempts;
+            set { finishedAttempts = value; OnPropertyChanged(); }
+        }
 
 
         public Question CurrentQuestion
@@ -234,6 +242,10 @@ namespace StudyQuizApp.ViewModels
             {
                 quizManager.FinishCurrentAttempt();
                 CurrentQuestion = null;
+
+                // Refresh finished attempts
+                FinishedAttempts = new ObservableCollection<string>(quizManager.GetResultsSummaries());
+
                 QuizState = QuizState.QuizFinished;
             }
         }
