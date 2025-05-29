@@ -177,10 +177,12 @@ namespace StudyQuizApp.ViewModels
         {
             // Quiz logic
             QuizWindow quizWindow = new QuizWindow(quizManager);
-            quizWindow.ShowDialog();
-
-            // update display-info if result true
-            // ask use to play again if incorrect questions exist
+            
+            if (quizWindow.ShowDialog() == true)
+            {
+                // quiz was finished (not cancelled)
+            }
+            
         }
 
 

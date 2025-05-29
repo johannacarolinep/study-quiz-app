@@ -75,8 +75,8 @@ namespace StudyQuizApp.Services
         public void InitiateQuiz()
         {
             currentAttempt = new Attempt(questionList.Count);
-            //attempts.Add(new Attempt(questionList.Count)); When the quiz finishes! Should not be there in case of cancel
-            incorrectIndices = new List<int>();
+            attempts = new List<Attempt>(); // reset attempts
+            incorrectIndices = new List<int>(); // reset incorrectIndices
             activeQuizIndices = Enumerable.Range(0, questionList.Count).ToList();
             currentIndex = 0;
         }

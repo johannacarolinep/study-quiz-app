@@ -12,6 +12,7 @@ namespace StudyQuizApp.ViewModels
 {
     public class QuizViewModel : INotifyPropertyChanged
     {
+        // Fields
         private readonly QuizManager quizManager;
         private int currentQuestionNumber;
         private int totalQuestions;
@@ -27,8 +28,10 @@ namespace StudyQuizApp.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // Commands
         public RelayCommand RevealAnswerCommand { get; }
         public RelayCommand RegisterAnswerCommand { get; }
+        public RelayCommand StartReRunCommand { get; }
 
         public QuizViewModel(QuizManager quizManager)
         {
@@ -38,6 +41,7 @@ namespace StudyQuizApp.ViewModels
 
             RevealAnswerCommand = new RelayCommand(_ => OnRevealAnswer(), _ => CanRevealAnswer());
             RegisterAnswerCommand = new RelayCommand(_ => OnRegisterAnswer(), _ => QuizState == QuizState.RevealingAnswer);
+            StartReRunCommand = new RelayCommand(_ => OnStartReRun(), _ => HasMistakes);
 
             RunQuizAttempt();
         }
@@ -270,5 +274,21 @@ namespace StudyQuizApp.ViewModels
                 QuizState = QuizState.QuizFinished;
             }
         }
+
+        private void OnStartReRun()
+        {
+            quizManager.StartRetry();
+            SelectedOption = null;
+            IsCorrect = null;
+            CorrectAnswerText = "";
+
+            // Refresh stats
+            UpdateStats();
+
+            // Clear feedback area
+            IncorrectCount = 0;
+            RunQuizAttempt();
+        }
+
     }
 }

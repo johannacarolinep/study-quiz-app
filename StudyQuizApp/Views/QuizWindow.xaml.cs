@@ -37,5 +37,16 @@ namespace StudyQuizApp.Views
                 vm.SelectedOption = option;
             }
         }
+
+        private void FinishButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+            this.Close();
+        }
+
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
