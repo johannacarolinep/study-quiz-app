@@ -62,11 +62,11 @@ namespace StudyQuizApp.ViewModels
                 _ => CanRunQuiz
             );
 
-            DisplayContent = new InstructionContent
+            DisplayContent = new HeadingAndListContent
             {
                 Heading = "Welcome to StudyQuizApp!",
                 Subheading = "Create questions or load an existing CSV file, and run the quiz to rehearse.",
-                Instructions = new List<string>
+                ContentStrings = new List<string>
                 {
                     "Create questions manually by clicking the Add buttons in the upper left corner",
                     "Select a question in the list to view its details here",
@@ -105,11 +105,11 @@ namespace StudyQuizApp.ViewModels
         {
             if (SelectedIndex == -1)
             {
-                DisplayContent = new InstructionContent
+                DisplayContent = new HeadingAndListContent
                 {
                     Heading = "You're using StudyQuizApp!",
                     Subheading = "Create questions or load an existing CSV file, and run the quiz to rehearse.",
-                    Instructions = new List<string>
+                    ContentStrings = new List<string>
                     {
                         "Create questions manually by clicking the Add buttons in the upper left corner",
                         "Select a question in the list to view its details here",
@@ -159,11 +159,11 @@ namespace StudyQuizApp.ViewModels
         private void ClearSelection()
         {
             SelectedIndex = -1;
-            DisplayContent = new InstructionContent
+            DisplayContent = new HeadingAndListContent
             {
                 Heading = "You're using StudyQuizApp!",
                 Subheading = "Create questions or load an existing CSV file, and run the quiz to rehearse.",
-                Instructions = new List<string>
+                ContentStrings = new List<string>
                 {
                     "Create questions manually by clicking the Add buttons in the upper left corner",
                     "Select a question in the list to view its details here",
@@ -181,6 +181,14 @@ namespace StudyQuizApp.ViewModels
             if (quizWindow.ShowDialog() == true)
             {
                 // quiz was finished (not cancelled)
+                List<string> results = quizManager.GetResultsSummaries();
+
+                DisplayContent = new HeadingAndListContent
+                {
+                    Heading = quizManager.ClearedAllQuestions() ? "Well done!" : "Hmm, maybe some more practice?",
+                    Subheading = quizManager.GetFeedbackSubheading(),
+                    ContentStrings = results
+                };
             }
             
         }

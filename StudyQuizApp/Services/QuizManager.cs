@@ -138,5 +138,19 @@ namespace StudyQuizApp.Services
 
             return results;
         }
+
+        public bool ClearedAllQuestions() => incorrectIndices.Count == 0;
+
+        public string GetFeedbackSubheading()
+        {
+            int reRuns = attempts.Count - 1;
+
+            if (reRuns == 0 && ClearedAllQuestions())
+                return "You got all questions correct on your first try!";
+            if (ClearedAllQuestions())
+                return $"You got all questions correct after {reRuns} re-run(s).";
+
+            return $"You completed the quiz in {attempts.Count} attempt(s). {incorrectIndices.Count} question(s) still need practice.";
+        }
     }
 }

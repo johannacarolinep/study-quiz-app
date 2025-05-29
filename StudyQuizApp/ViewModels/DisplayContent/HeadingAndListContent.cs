@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace StudyQuizApp.ViewModels.DisplayContent
 {
-    public class InstructionContent
+    public class HeadingAndListContent
     {
         public string Heading { get; set; }
         public string Subheading { get; set; }
-        public List<string> Instructions { get; set; }
+        public List<string> ContentStrings { get; set; }
     }
 }

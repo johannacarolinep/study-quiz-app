@@ -122,7 +122,7 @@
                 Margin="0,10,0,0">
                     <ContentControl.Resources>
                         <!-- Instruction View Template -->
-                        <DataTemplate DataType="{x:Type vm:InstructionContent}">
+                        <DataTemplate DataType="{x:Type vm:HeadingAndListContent}">
                             <StackPanel Margin="10">
                                 <TextBlock Text="{Binding Heading}"
                                    FontSize="20"
@@ -138,7 +138,7 @@
                                    Margin="0,0,0,12"
                                    TextWrapping="Wrap" />
 
-                                <ItemsControl ItemsSource="{Binding Instructions}">
+                                <ItemsControl ItemsSource="{Binding ContentStrings}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
