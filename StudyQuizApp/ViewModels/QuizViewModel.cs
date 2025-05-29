@@ -42,7 +42,12 @@ namespace StudyQuizApp.ViewModels
         public int CurrentQuestionNumber
         {
             get => currentQuestionNumber;
-            set { currentQuestionNumber = value; OnPropertyChanged(nameof(CurrentQuestionNumber)); }
+            set
+            { 
+                currentQuestionNumber = value;
+                OnPropertyChanged(nameof(CurrentQuestionNumber));
+                OnPropertyChanged(nameof(QuestionsAnswered));
+            }
         }
 
         public int TotalQuestions
@@ -56,6 +61,8 @@ namespace StudyQuizApp.ViewModels
             get => correctCount;
             set { correctCount = value; OnPropertyChanged(nameof(CorrectCount)); }
         }
+
+        public int QuestionsAnswered => CurrentQuestionNumber > 0 ? CurrentQuestionNumber - 1 : 0;
 
         public double Percent
         {
@@ -148,7 +155,7 @@ namespace StudyQuizApp.ViewModels
             CurrentQuestionNumber = quizManager.CurrentIndex + 1;
             TotalQuestions = quizManager.CurrentAttempt.QuestionsCount;
             CorrectCount = quizManager.CurrentAttempt.CorrectCount;
-            Percent = quizManager.CurrentAttempt.GetRelativePoint() * 100;
+            Percent = quizManager.CurrentAttempt.GetRelativePoint(QuestionsAnswered) * 100;
         }
 
         private void RunQuizAttempt()
@@ -217,6 +224,7 @@ namespace StudyQuizApp.ViewModels
             {
                 quizManager.IncrementCurrentIndex();
                 CurrentQuestion = quizManager.GetCurrentQuestion();
+                UpdateStats();
                 SelectedOption = null;
                 IsCorrect = null;
                 CorrectAnswerText = "";

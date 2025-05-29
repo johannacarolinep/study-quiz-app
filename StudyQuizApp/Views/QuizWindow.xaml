@@ -28,15 +28,17 @@
         <Border Grid.Column="0" Background="#EEE" Padding="10">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="120"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Stats -->
-                <StackPanel Grid.Row="0">
-                    <TextBlock FontWeight="Bold" FontSize="16" Margin="0 0 0 20">
+                <!-- Current Stats -->
+                <Border Grid.Row="0">
+                    <StackPanel Visibility="{Binding CurrentQuestion, Converter={StaticResource NullToVisibilityConverter}}">
+                    <TextBlock FontWeight="Bold" FontSize="14" Margin="0 0 0 10">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="Q.{0} (out of {1})">
+                            <MultiBinding StringFormat="Q.{0} (of {1})">
                                 <Binding Path="CurrentQuestionNumber"/>
                                 <Binding Path="TotalQuestions"/>
                             </MultiBinding>
@@ -45,17 +47,24 @@
                     <TextBlock Text="Current score:" FontWeight="Bold" FontSize="14" Margin="0 0 0 5"/>
                     <TextBlock FontSize="14" Margin="0 0 0 5">
                         <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} correct (out of {1})">
+                            <MultiBinding StringFormat="{}{0}/{1}">
                                 <Binding Path="CorrectCount"/>
-                                <Binding Path="TotalQuestions"/>
-                            </MultiBinding>
+                                    <Binding Path="QuestionsAnswered"/>
+                                </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
                     <TextBlock Text="{Binding Percent, StringFormat={}{0:F0}%}" FontSize="14"/>
                 </StackPanel>
+                </Border>
+
+                <!-- Finished attempts: -->
+                <StackPanel Grid.Row="1">
+                    <!-- Add finished attempts in here -->
+                    <TextBlock>Finished attempts:</TextBlock>
+                </StackPanel>
 
                 <!-- Cancel button -->
-                <Button Grid.Row="1"
+                <Button Grid.Row="2"
                         Content="Cancel Quiz"
                         HorizontalAlignment="Stretch"
                         Background="DarkRed"

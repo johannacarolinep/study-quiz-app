@@ -26,7 +26,10 @@ namespace StudyQuizApp.Models
         // Methods
         public void AddPoint() => correctCount++;
 
-        public double GetRelativePoint() =>
-            questionsCount > 0 ? (double)correctCount / questionsCount : 0;
+        public double GetRelativePoint(int? questionsAnswered = null)
+        {
+            int denominator = questionsAnswered ?? questionsCount;
+            return denominator > 0 ? (double)correctCount / denominator : 0;
+        }
     }
 }
