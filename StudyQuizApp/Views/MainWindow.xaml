@@ -22,6 +22,8 @@
             <MenuItem Header="_File">
                 <MenuItem Header="New" />
                 <MenuItem Header="Open" />
+                <MenuItem Header="Save as"
+                          Click="SaveMenuItem_Click" />
                 <Separator />
                 <MenuItem Header="Exit"/>
             </MenuItem>

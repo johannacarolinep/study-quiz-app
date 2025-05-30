@@ -23,6 +23,7 @@ namespace StudyQuizApp.Services
         public int CurrentIndex { get { return currentIndex; } }
 
         public Attempt CurrentAttempt { get => currentAttempt; }
+        public List<Question> QuestionList { get { return questionList; } }
 
         // Methods
         public void AddQuestion(Question question) { 

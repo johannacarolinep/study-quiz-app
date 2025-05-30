@@ -16,6 +16,7 @@ namespace StudyQuizApp.ViewModels
         private readonly QuizManager quizManager = new QuizManager();
 
         public ObservableCollection<string> QuestionStrings { get; set; } = new ObservableCollection<string>();
+        public List<Question> QuestionList => quizManager.QuestionList;
 
         private int _selectedIndex = -1;
         public int SelectedIndex
